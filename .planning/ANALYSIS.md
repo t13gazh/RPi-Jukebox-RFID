@@ -98,21 +98,126 @@
 
 ---
 
-## v3 (Future3) — Vorläufige Einschätzung
+## v3 (Future3) — Tiefenanalyse (verifiziert am Code)
 
-**Status:** Separater Branch (`future3/main`, `future3/develop`)
+**Status:** Branch `future3/develop`, letzter Commit: Nov 2025
+**Aktivität:** 94 Commits seit Jan 2024, nur 16 seit Jan 2025 — abnehmend
 
-### Bekannt (aus README)
-- Kompletter Rewrite in Python
-- Plugin-System geplant
-- Responsive Web-Client
-- "Becoming a lot more stable" aber "not all features from v2.x ported"
-- Sucht "adopters, testers and contributors"
+### Architektur
 
-### Bewertung
-- **Positiv:** Klare architektonische Ziele, Python-only Stack
-- **Bedenken:** Jahrelange Entwicklung, Features nicht komplett, niedrige Adoption
-- **TODO:** v3-Branch separat evaluieren (Architektur, Code-Qualität, Vollständigkeit)
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    React SPA (MUI 5)                        │
+│              react 17 + react-scripts + jszmq               │
+│      Components: Cards, Library, Player, Settings           │
+└──────────────┬────────────────────┬─────────────────────────┘
+               │ REST API           │ ZMQ (via jszmq)
+               ▼                    ▼
+┌─────────────────────────────────────────────────────────────┐
+│              Flask + Waitress (WSGI)                         │
+│              Custom RPC System (jukebox.plugs)              │
+│              ZeroMQ PubSub intern                           │
+└──────────────┬──────────────────────────────────────────────┘
+               │ Python-Module
+┌──────────────▼──────────────────────────────────────────────┐
+│                  Jukebox Components                          │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌───────────────┐  │
+│  │playermpd │ │  rfid/   │ │  gpio/   │ │  cards/       │  │
+│  │(MPD)     │ │ hardware │ │ controls │ │  (Card→URI)   │  │
+│  └──────────┘ └──────────┘ └──────────┘ └───────────────┘  │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌───────────────┐  │
+│  │ volume/  │ │ timers/  │ │ hostif/  │ │ mqtt/         │  │
+│  └──────────┘ └──────────┘ └──────────┘ └───────────────┘  │
+│  ┌──────────┐ ┌──────────┐ ┌────────────────────────────┐  │
+│  │ jingle/  │ │ battery/ │ │ synchronisation/           │  │
+│  └──────────┘ └──────────┘ └────────────────────────────┘  │
+└──────────────┬──────────────────────────────────────────────┘
+               ▼
+┌─────────────────────────────────────────────────────────────┐
+│              MPD (Music Player Daemon)                       │
+│          ALSA → Audio Output                                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Verifizierte Fakten
+
+**Backend (90 Python-Dateien):**
+- Komplett Python — kein Bash für Steuerungslogik mehr
+- ZeroMQ PubSub für interne Kommunikation (deutlich besser als v2)
+- Custom RPC-Dekorator-System: Python-Methoden werden automatisch zu API-Endpoints
+- YAML-basierte Konfiguration (statt 50+ Einzeldateien)
+- Typ-Hints teilweise vorhanden, nicht durchgängig
+- Python `logging` Modul korrekt eingesetzt
+
+**Frontend (94 JS-Dateien):**
+- React 17 (nicht 18!) + Material UI 5
+- react-scripts (Create React App, nicht Vite — veraltet)
+- i18next für Internationalisierung
+- jszmq für ZeroMQ-Kommunikation im Browser
+- UI-Bereiche: Cards, Library, Player, Settings, Navigation
+
+**RFID-Reader (7 Implementierungen):**
+- `rc522_spi` — SPI-basiert
+- `generic_usb` — USB-HID
+- `generic_nfcpy` — NFC über nfcpy
+- `pn532_i2c_py532` — I2C
+- `rdm6300_serial` — Seriell
+- `fake_reader_gui` — Test/Entwicklung
+- `template_new_reader` — Template für neue Reader
+
+**Tests: 6 Dateien total**
+- `test/cfghandler/test_cfghandler.py`
+- `test/evdev/test_evdev_init.py`
+- `test/gpioz/test_twinbutton.py`
+- 3 GitHub Actions CI-Workflows (Docker-Build, Webapp-Build)
+- Keine Integration-Tests, keine API-Tests, keine UI-Tests
+
+### Feature-Vollständigkeit (v3 vs. Anforderungen)
+
+| Anforderung | v3 Status | Details |
+|-------------|-----------|---------|
+| RFID → Musik | ✓ Vorhanden | 7 Reader-Implementierungen, gut abstrahiert |
+| Einfaches Web-UI | ✗ Unvollständig | React-App existiert, aber nicht feature-complete |
+| Karten-Management UI | ✗ Teilweise | Cards-Komponente existiert, Umfang unklar |
+| Einzeldatei → Karte | ✗ Unklar | Card→URI Mapping unterstützt es theoretisch |
+| Spotify | ✗ **Nicht vorhanden** | Code-Kommentar: "So far this is only for MPD (no spotify)" |
+| Radio-Streams | ✓ Via MPD | MPD kann HTTP-Streams abspielen |
+| GPIO-Buttons | ✓ Vorhanden | Saubere Python-Implementierung |
+| Gyro-Sensor | ✗ Nicht vorhanden | Müsste als neues Component gebaut werden |
+| Rollen (Admin/User) | ✗ **Nicht vorhanden** | Kein Auth, kein Login, keine Rollentrennung |
+| Stabilität | ? Ungetestet | 6 Testdateien, keine Integration-Tests |
+| Config-Persistenz | ✓ Verbessert | YAML, separiert von Code |
+| Installer/Update | ? Teilweise | Install-Scripts vorhanden, kein Migrations-System |
+| MQTT | ✓ Vorhanden | IoT/Smart-Home Integration |
+| Battery Monitor | ✓ Vorhanden | Für mobile Boxen |
+
+### Bewertung: 5.5/10
+
+**Positiv:**
+- Architektur ist ein massiver Sprung von v2 (Python-only, ZMQ, Components)
+- RFID-Reader-Abstraktion hervorragend (7 Implementierungen + Template)
+- YAML-Config statt Datei-Chaos
+- Logging korrekt implementiert
+- Component-System theoretisch erweiterbar
+
+**Negativ:**
+- **Spotify explizit nicht implementiert** — Quellcode-Kommentar bestätigt dies
+- **Keine Authentifizierung** — Rollentrennung müsste komplett gebaut werden
+- **React 17 + CRA** — Frontend-Stack bereits veraltet (CRA ist deprecated)
+- **6 Testdateien** für 90 Python + 94 JS Dateien — nicht testbar
+- **Custom RPC-System** erhöht Einstiegshürde massiv
+- **Abnehmende Commit-Aktivität** — Projekt möglicherweise im Stillstand
+- **Nie als Stable released** — nach Jahren kein v3.0.0
+- **Dokumentation mangelhaft** — kein OpenAPI, wenig Dev-Docs
+
+### Spotify-Problem (branchenübergreifend)
+
+Spotify hat `libspotify` eingestellt. Betrifft ALLE Open-Source-Player:
+- `mopidy-spotify` nutzt fragile inoffizielle API
+- `spotifyd`/`librespot` = Spotify Connect Receiver (kein programmatischer Zugriff)
+- Spotify ToS verbieten technisch einige Use Cases
+- **Kein Open-Source-Projekt löst Spotify zuverlässig**
+- Realistisch: Spotify Connect als Receiver oder Premium-Features akzeptieren
 
 ---
 
@@ -192,28 +297,65 @@ Eltern:  Web-UI → Karten verwalten, Streaming, Einstellungen
 
 ---
 
-## Vergleichsmatrix
+## Vergleichsmatrix (aktualisiert nach v3-Evaluation)
 
-| Feature | Phoniebox v2 | Mopidy+Custom | Von Null | v3 beitragen |
+| Feature | Phoniebox v2 | Phoniebox v3 | Mopidy+Custom | Von Null |
 |---------|:---:|:---:|:---:|:---:|
-| RFID → Musik | ✓ | ✓ (custom) | ✓ (custom) | ✓ |
-| Einfaches Web-UI | ✗ | ✓ | ✓ | ? |
-| Spotify | ✗ kaputt | ✓ | ✓ | ? |
-| Radio-Streams | eingeschränkt | ✓ | ✓ | ? |
-| GPIO/Gyro | ✓ | ✓ (custom) | ✓ (custom) | ✓ |
-| Einzeldatei→Karte | ✗ | ✓ | ✓ | ? |
-| Rollen (Admin/User) | ✗ | ✓ | ✓ | ? |
-| Stabilität | ✗ Bugs | ✓ ausgereift | ✗ neu | ? |
+| RFID → Musik | ✓ | ✓ | ✓ (custom) | ✓ (custom) |
+| Einfaches Web-UI | ✗ | ✗ unvollständig | ✓ | ✓ |
+| Spotify | ✗ kaputt | ✗ nicht impl. | ~fragil | ~fragil |
+| Radio-Streams | eingeschränkt | ✓ via MPD | ✓ | ✓ |
+| GPIO/Gyro | ✓/✗ | ✓/✗ | ✓ (custom) | ✓ (custom) |
+| Einzeldatei→Karte | ✗ | ~möglich | ✓ | ✓ |
+| Rollen (Admin/User) | ✗ | ✗ | ✓ | ✓ |
+| Stabilität | ✗ Bugs | ? ungetestet | ✓ ausgereift | ✗ neu |
 | Config-Persistenz | ✗ | ✓ | ✓ | ✓ |
-| **Aufwand** | 4-6 Monate | **2-4 Wochen** | 3-6 Monate | 2-4 Monate |
+| Test-Coverage | 3 Tests | 6 Tests | ✓ Mopidy-Core | ✓ eigene |
+| Community-Aktivität | Maintenance | Abnehmend | Aktiv | N/A |
+| **Aufwand** | 4-6 Monate | 2-4 Monate | **2-4 Wochen** | 3-6 Monate |
+
+Legende: ✓ = vorhanden, ✗ = fehlt, ~ = fragil/eingeschränkt, ? = unklar
 
 ---
 
-## Empfehlung
+## Empfehlung (nach v3-Evaluation)
 
-**Primär: Mopidy + eigene RFID-Schicht** — beste Balance aus Aufwand und Ergebnis.
+### Ergebnis: v3 ändert die Empfehlung NICHT
 
-**Nächster Schritt:** v3-Branch evaluieren. Falls v3-Architektur solide ist, könnte das eine Alternative oder spätere Migration sein.
+v3 hat eine bessere Architektur als v2 (Python-only, ZMQ, Components), aber:
+- **Spotify fehlt komplett** (im Quellcode bestätigt)
+- **Keine Authentifizierung/Rollentrennung**
+- **Web-UI unvollständig**
+- **Abnehmende Community-Aktivität** (16 Commits in 11 Monaten)
+- **Nie als stable released**
+- **6 Tests für 184 Dateien**
+
+**Primäre Empfehlung bleibt: Mopidy + eigene RFID-Schicht**
+
+### Hybrid-Option (pragmatisch)
+
+Die beste Elemente aus v3 übernehmen, aber eigene Basis bauen:
+- **Übernehmen aus v3:** RFID-Reader-Implementierungen (exzellent, 7 Varianten)
+- **Eigene Basis:** FastAPI + Mopidy + React/Svelte
+- **Ergebnis:** Schnellster Weg zu einem vollständigen, wartbaren System
+
+### Entscheidungsmatrix nach Priorität
+
+| Wenn dir wichtig ist... | Dann wähle... |
+|-------------------------|---------------|
+| Schnellstes Ergebnis | Mopidy + Custom (2-4 Wochen) |
+| Community & langfristiger Support | Mopidy + Custom (aktive Community) |
+| Maximale Kontrolle | Von Null (3-6 Monate) |
+| Minimaler eigener Code | Phoniebox v3 Fork (aber Lücken bleiben) |
+| Spotify-Integration | Keiner löst es sauber — Spotify Connect als Workaround |
+
+### Spotify-Realität
+
+Spotify ist in der Open-Source-Welt ein ungelöstes Problem:
+- `mopidy-spotify`: Fragil, inoffizielle API, bricht regelmäßig
+- `spotifyd`/`librespot`: Spotify Connect Receiver, kein programmatischer Zugriff
+- **Pragmatische Lösung:** Spotify Connect Receiver + RFID triggert "Play on this device"
+- Alternative: `yt-dlp` zum Herunterladen von Playlists als lokale Dateien
 
 ---
 
@@ -228,4 +370,5 @@ Lektionen für das eigene Projekt:
 
 ---
 *Erstellt: 2026-02-06*
-*Nächster Schritt: v3-Branch evaluieren*
+*v3-Evaluation abgeschlossen: 2026-02-06*
+*Status: Entscheidung offen — alle Optionen dokumentiert*
