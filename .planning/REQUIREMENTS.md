@@ -1,7 +1,7 @@
 # Requirements: Phoniebox Web-Interface
 
 **Defined:** 2026-02-06
-**Core Value:** Parents can effortlessly manage their children's music box from any phone — no manual needed.
+**Core Value:** Parents can effortlessly manage their children's music box from any phone -- no manual needed.
 
 ## v1 Requirements
 
@@ -81,7 +81,7 @@ Requirements for the modern web interface replacing the v2 PHP frontend.
 
 - [ ] **PLAT-01**: Mobile-first responsive design
 - [ ] **PLAT-02**: Offline-capable (local music works without internet)
-- [ ] **PLAT-03**: "Leichte Sprache" — plain language UI, self-explanatory
+- [ ] **PLAT-03**: "Leichte Sprache" -- plain language UI, self-explanatory
 - [ ] **PLAT-04**: PWA / Add to Home Screen
 - [ ] **PLAT-05**: Real-time player state via WebSocket
 - [ ] **PLAT-06**: Fast initial load (< 3 seconds on Pi)
@@ -109,7 +109,7 @@ Deferred to future milestone. Tracked but not in current roadmap.
 
 ### Smart Automation
 
-- **AUTO-01**: Scheduled playback (alarm clock mode — "play bedtime story at 19:00")
+- **AUTO-01**: Scheduled playback (alarm clock mode -- "play bedtime story at 19:00")
 - **AUTO-02**: Volume schedule (auto-limit during sleep hours)
 - **AUTO-03**: Content rotation ("play different audiobook each day from set")
 
@@ -120,7 +120,7 @@ Explicitly excluded. Documented to prevent scope creep.
 | Feature | Reason |
 |---------|--------|
 | Spotify integration | libspotify discontinued, industry-wide broken, no reliable OSS solution |
-| Music metadata indexer (ID3, MusicBrainz) | Phoniebox uses folders not music collections — folder name IS the metadata |
+| Music metadata indexer (ID3, MusicBrainz) | Phoniebox uses folders not music collections -- folder name IS the metadata |
 | Equalizer / DSP / audio format settings | Parents don't need audio engineering, fixed good-enough settings |
 | Multi-room / multi-box sync | One box per child, enormous complexity for no value |
 | Social features (sharing, ratings) | Local family device, not a social network |
@@ -138,13 +138,70 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated during roadmap creation) | | |
+| PLAY-01 | Phase 3: Player UI | Pending |
+| PLAY-02 | Phase 3: Player UI | Pending |
+| PLAY-03 | Phase 3: Player UI | Pending |
+| PLAY-04 | Phase 3: Player UI | Pending |
+| PLAY-05 | Phase 3: Player UI | Pending |
+| PLAY-06 | Phase 3: Player UI | Pending |
+| PLAY-07 | Phase 3: Player UI | Pending |
+| PLAY-08 | Phase 7: Parent Settings | Pending |
+| LIB-01 | Phase 4: Library Browser | Pending |
+| LIB-02 | Phase 4: Library Browser | Pending |
+| LIB-03 | Phase 4: Library Browser | Pending |
+| LIB-04 | Phase 4: Library Browser | Pending |
+| LIB-05 | Phase 4: Library Browser | Pending |
+| LIB-06 | Phase 4: Library Browser | Pending |
+| CARD-01 | Phase 5: Card Management | Pending |
+| CARD-02 | Phase 5: Card Management | Pending |
+| CARD-03 | Phase 5: Card Management | Pending |
+| CARD-04 | Phase 5: Card Management | Pending |
+| CARD-05 | Phase 5: Card Management | Pending |
+| CARD-06 | Phase 5: Card Management | Pending |
+| CARD-07 | Phase 5: Card Management | Pending |
+| CONT-01 | Phase 6: Content Management | Pending |
+| CONT-02 | Phase 6: Content Management | Pending |
+| CONT-03 | Phase 6: Content Management | Pending |
+| CONT-04 | Phase 6: Content Management | Pending |
+| CONT-05 | Phase 6: Content Management | Pending |
+| AUTH-01 | Phase 9: Access Control | Pending |
+| AUTH-02 | Phase 9: Access Control | Pending |
+| AUTH-03 | Phase 9: Access Control | Pending |
+| SETT-01 | Phase 7: Parent Settings | Pending |
+| SETT-02 | Phase 7: Parent Settings | Pending |
+| SETT-03 | Phase 7: Parent Settings | Pending |
+| SETT-04 | Phase 7: Parent Settings | Pending |
+| SETT-05 | Phase 7: Parent Settings | Pending |
+| SETT-06 | Phase 7: Parent Settings | Pending |
+| XPRT-01 | Phase 8: Expert Settings | Pending |
+| XPRT-02 | Phase 8: Expert Settings | Pending |
+| XPRT-03 | Phase 8: Expert Settings | Pending |
+| XPRT-04 | Phase 8: Expert Settings | Pending |
+| XPRT-05 | Phase 8: Expert Settings | Pending |
+| XPRT-06 | Phase 8: Expert Settings | Pending |
+| XPRT-07 | Phase 8: Expert Settings | Pending |
+| GYRO-01 | Phase 10: Gyro Integration | Pending |
+| GYRO-02 | Phase 10: Gyro Integration | Pending |
+| GYRO-03 | Phase 10: Gyro Integration | Pending |
+| GYRO-04 | Phase 10: Gyro Integration | Pending |
+| PLAT-01 | Phase 3: Player UI | Pending |
+| PLAT-02 | Phase 11: PWA & Polish | Pending |
+| PLAT-03 | Phase 11: PWA & Polish | Pending |
+| PLAT-04 | Phase 11: PWA & Polish | Pending |
+| PLAT-05 | Phase 2: Real-Time Layer | Pending |
+| PLAT-06 | Phase 3: Player UI | Pending |
+| PLAT-07 | Phase 3: Player UI | Pending |
+| INFR-01 | Phase 1: API Foundation | Pending |
+| INFR-02 | Phase 1: API Foundation | Pending |
+| INFR-03 | Phase 3: Player UI | Pending |
+| INFR-04 | Phase 1: API Foundation | Pending |
+| INFR-05 | Phase 1: API Foundation | Pending |
 
 **Coverage:**
-- v1 requirements: 48 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 48
+- v1 requirements: 58 total
+- Mapped to phases: 58/58
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-06*
-*Last updated: 2026-02-06 after initial definition*
+*Last updated: 2026-02-06 after roadmap creation*
