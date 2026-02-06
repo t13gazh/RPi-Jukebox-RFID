@@ -318,36 +318,48 @@ Legende: ✓ = vorhanden, ✗ = fehlt, ~ = fragil/eingeschränkt, ? = unklar
 
 ---
 
-## Empfehlung (nach v3-Evaluation)
+## Revidierte Empfehlung (nach Gesamtanalyse)
 
-### Ergebnis: v3 ändert die Empfehlung NICHT
+### Kernerkenntnis: Nicht alles neu bauen — gezielt die kaputten Teile ersetzen
 
-v3 hat eine bessere Architektur als v2 (Python-only, ZMQ, Components), aber:
-- **Spotify fehlt komplett** (im Quellcode bestätigt)
-- **Keine Authentifizierung/Rollentrennung**
-- **Web-UI unvollständig**
-- **Abnehmende Community-Aktivität** (16 Commits in 11 Monaten)
-- **Nie als stable released**
-- **6 Tests für 184 Dateien**
+Was bereits funktioniert und NICHT angefasst werden muss:
+- **RFID-Reader** → läuft produktiv in v2
+- **GPIO-Buttons** → läuft produktiv in v2
+- **Gyro-Sensor** → eigenes Plugin (phonie-gyro), eigenständiger systemd-Service
+- **MPD als Audio-Backend** → stabil, bewährt
+- **Karten→Ordner-Zuordnung** → funktioniert (nur Erweiterung nötig)
+- **Playout-Steuerung** → `playout_controls.sh` ist hässlich aber funktional
 
-**Primäre Empfehlung bleibt: Mopidy + eigene RFID-Schicht**
+### Gyro-Sensor (phonie-gyro) — Bestandsaufnahme
 
-### Hybrid-Option (pragmatisch)
+- **Repo:** https://github.com/t13gazh/phonie-gyro.git
+- **Version:** 1.1.0
+- **Hardware:** MPU6050 Gyroskop-Sensor über I2C (SMBus)
+- **Architektur:** Eigenständiger Python-Daemon als systemd-Service
+- **Integration:** Ruft direkt `mpc` auf (next/prev/toggle/stop) — komplett entkoppelt
+- **Gesten:** Vorne kippen=Play/Pause, Hinten=Stop, Rechts=Next, Links=Prev
+- **Config:** `/etc/phonie-gyro.conf` (INI-Format)
+- **Features:** Kalibrierung, 3 Sensibilitäts-Profile, CSV-Logging, Mehrsprachig
+- **Status:** Funktionsfähig, muss nur ins Phoniebox-Projekt integriert werden
 
-Die beste Elemente aus v3 übernehmen, aber eigene Basis bauen:
-- **Übernehmen aus v3:** RFID-Reader-Implementierungen (exzellent, 7 Varianten)
-- **Eigene Basis:** FastAPI + Mopidy + React/Svelte
-- **Ergebnis:** Schnellster Weg zu einem vollständigen, wartbaren System
+### Gewählte Strategie: v2 als Basis + inkrementelle Verbesserungen
 
-### Entscheidungsmatrix nach Priorität
+| Problem | Lösung | Aufwand |
+|---------|--------|---------|
+| Web-UI zu technisch | **Modernes Frontend** auf bestehende API/Shell setzen | Prio 1 |
+| Gyro-Sensor nicht integriert | **phonie-gyro** ins Projekt integrieren, Web-UI Konfig | Prio 2 |
+| Keine Rollentrennung | Nginx-Proxy oder App-Level Auth | Prio 3 |
+| Kein Einzeldatei→Karte | Karten-Registrierung erweitern | Prio 4 |
+| Spotify kaputt | Spotify Connect (librespot) als Workaround | Prio 5 |
+| Config-Verlust bei Update | Config auslagern, Backup-System | Prio 6 |
+| Streaming unkomfortabel | Web-UI für Stream-Management | Prio 7 |
 
-| Wenn dir wichtig ist... | Dann wähle... |
-|-------------------------|---------------|
-| Schnellstes Ergebnis | Mopidy + Custom (2-4 Wochen) |
-| Community & langfristiger Support | Mopidy + Custom (aktive Community) |
-| Maximale Kontrolle | Von Null (3-6 Monate) |
-| Minimaler eigener Code | Phoniebox v3 Fork (aber Lücken bleiben) |
-| Spotify-Integration | Keiner löst es sauber — Spotify Connect als Workaround |
+### Warum NICHT Mopidy/Neubau?
+
+- RFID, GPIO, Gyro, MPD laufen bereits — warum ersetzen?
+- Mopidy wäre nur wegen Spotify relevant, aber Spotify ist branchenweit kaputt
+- Neubau = 3-6 Monate für etwas, das zu 70% schon funktioniert
+- v2-Backend (Bash+MPD) ist hässlich aber stabil — Frontend-Ersatz reicht
 
 ### Spotify-Realität
 
@@ -369,6 +381,72 @@ Lektionen für das eigene Projekt:
 5. **Offline-first:** Muss ohne Internet funktionieren
 
 ---
+
+## Entwicklungsumgebung
+
+### Was wird benötigt?
+
+| Aufgabe | Pi nötig? | Kann am PC |
+|---------|:---------:|:----------:|
+| Web-UI entwickeln | Nein | ✓ Browser reicht |
+| Backend-Logik | Nein | ✓ mit Mocks |
+| RFID testen | Ja | ✗ |
+| GPIO testen | Ja | ✗ |
+| Gyro testen | Ja | ✗ (MPU6050 I2C) |
+| Audio testen | Ja | ✗ |
+| Integration | Ja | ✗ |
+
+### Hardware-Empfehlung
+
+- **Zweite SD-Karte** (~15€) = Minimum. Produktiv-Box bleibt unberührt
+- **Zweiter Pi + RFID-Reader + Lautsprecher** (~50-80€) = Ideal
+- **Entwicklung am PC** = Web-UI und API-Arbeit, Deploy per SSH auf Pi
+
+### v2-Update-Situation
+
+- v2 hat **kein Update-System**. Update = manuelles `git pull`
+- v2→v3 ist kein Update sondern Neuinstallation (komplett anderes System)
+- Unsere Strategie: v2 beibehalten, Frontend und Features inkrementell ersetzen
+
+---
+
+## Umsetzungsplan (Phasen)
+
+### Phase 1: Modernes Web-Interface (Priorität)
+- Neues Frontend (React oder Svelte) auf die bestehende v2 API/Shell setzen
+- Endanwender-gerecht: einfach, mobil-optimiert, klar strukturiert
+- Eltern-Ansicht: Karten verwalten, Musik hochladen, Settings
+- Player-Ansicht: Was läuft gerade, Lautstärke, Play/Pause
+- Bestehende PHP-API als Brücke nutzen oder leichtgewichtige REST-API davorsetzen
+
+### Phase 2: Gyro-Sensor Integration
+- phonie-gyro ins Phoniebox-Projekt integrieren
+- Gyro-Konfiguration über neues Web-UI steuerbar machen
+- Kalibrierung über Web-UI oder zumindest dokumentierten Prozess
+- Sensibilitäts-Profil über Web-UI wählbar
+
+### Phase 3: Karten-Management verbessern
+- Einzeldateien (nicht nur Ordner) zu RFID-Karten zuweisbar
+- Stream-URLs komfortabel hinzufügen (ARD/NDR/ZDF Vorlagen)
+- Verbesserte Karten-Registrierung im neuen UI
+
+### Phase 4: Rollentrennung & Sicherheit
+- User-Modus (nur Player, Lautstärke) vs Admin-Modus (Konfiguration)
+- Einfacher Auth-Mechanismus (PIN oder Passwort für Admin)
+- Security-Fixes (Command Injection, chmod 777)
+
+### Phase 5: Spotify & Streaming
+- Spotify Connect via librespot evaluieren
+- Stream-Bibliothek (ARD/NDR/ZDF vorkonfiguriert)
+- YouTube-Download via yt-dlp reparieren
+
+### Phase 6: Stabilität & Installer
+- Hardware-Diagnose (Aufhängen, Shutdown-Problem)
+- Config-Backup/Restore System
+- Update-Mechanismus ohne Konfig-Verlust
+
+---
 *Erstellt: 2026-02-06*
 *v3-Evaluation abgeschlossen: 2026-02-06*
-*Status: Entscheidung offen — alle Optionen dokumentiert*
+*Revidierte Empfehlung: 2026-02-06 — v2 als Basis, inkrementell verbessern*
+*Gyro-Sensor (phonie-gyro) analysiert: 2026-02-06*
