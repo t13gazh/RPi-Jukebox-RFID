@@ -1,15 +1,65 @@
-# Phoniebox: the RPi-Jukebox-RFID
+# Phoniebox: RPi-Jukebox-RFID — Modern Web UI Fork
 
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/MiczFlor/RPi-Jukebox-RFID/develop)
-
-[![Python Checks and Tests](https://github.com/MiczFlor/RPi-Jukebox-RFID/actions/workflows/pythonpackage.yml/badge.svg)](https://github.com/MiczFlor/RPi-Jukebox-RFID/actions/workflows/pythonpackage.yml)
-[![Test Install Scripts Debian](https://github.com/MiczFlor/RPi-Jukebox-RFID/actions/workflows/test_docker_debian.yml/badge.svg)](https://github.com/MiczFlor/RPi-Jukebox-RFID/actions/workflows/test_docker_debian.yml)
-[![CodeQL](https://github.com/MiczFlor/RPi-Jukebox-RFID/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/MiczFlor/RPi-Jukebox-RFID/actions/workflows/codeql-analysis.yml)
-[![PHP Tests](https://github.com/MiczFlor/RPi-Jukebox-RFID/actions/workflows/php.yml/badge.svg)](https://github.com/MiczFlor/RPi-Jukebox-RFID/actions/workflows/php.yml)
-
-[![Coverage Status](https://coveralls.io/repos/github/MiczFlor/RPi-Jukebox-RFID/badge.svg?branch=develop)](https://coveralls.io/github/MiczFlor/RPi-Jukebox-RFID?branch=develop)
+> 🔀 **Fork of [MiczFlor/RPi-Jukebox-RFID](https://github.com/MiczFlor/RPi-Jukebox-RFID)**
+> Based on v2.x · Replacing the PHP/jQuery web interface with a modern SPA · All hardware untouched
 
 [![Matrix chat](https://matrix.to/img/matrix-badge.svg)](https://matrix.to/#/#phoniebox_community:matrix.org)
+
+## What's Different in This Fork
+
+This fork keeps the **entire v2 backend** (RFID daemon, GPIO buttons, MPD, `playout_controls.sh`) and replaces **only the web interface** — the 77 PHP/jQuery/Bootstrap 3 files in `htdocs/` — with a modern stack:
+
+| Component | Old (v2) | New (this fork) |
+|-----------|----------|-----------------|
+| **Frontend** | jQuery 1.12 + Bootstrap 3 + PHP templates | Svelte 5 + SvelteKit + Tailwind CSS |
+| **Backend API** | PHP with `exec()` calls | FastAPI (Python) wrapping shell scripts safely |
+| **Web server** | Lighttpd | Nginx (WebSocket proxy support) |
+| **Real-time** | 5-second polling | WebSocket with MPD idle bridge |
+| **Config** | 50+ flat files in `settings/` | SQLite (with flat-file writeback for shell scripts) |
+| **Auth** | None | Three-tier PIN model (open / parent / expert) |
+| **Security** | Command injection in PHP, `shell=True` | Subprocess argument lists, input validation |
+
+### Why not v3?
+
+We evaluated [Phoniebox v3 (future3)](https://github.com/MiczFlor/RPi-Jukebox-RFID/tree/future3/main) and decided against migrating. v2's backend works reliably — only the web UI needs replacement. See [our analysis](.planning/ANALYSIS.md) for the full evaluation.
+
+### What stays the same
+
+Everything that works stays untouched:
+
+* RFID card reader (RC522/USB) and `daemon_rfid_reader.py`
+* GPIO buttons and rotary encoder via `gpio_control.py`
+* MPU6050 gyro sensor via [phonie-gyro](https://github.com/t13gazh/phonie-gyro)
+* MPD audio playback and `playout_controls.sh` (1,153 lines, single source of truth)
+* Card-to-folder assignment, resume position, playlists
+* All existing hardware (speakers, DACs, arcade buttons)
+
+## Status
+
+🚧 **In development** — no releases yet.
+
+| PR | Scope | Slices | Status |
+|----|-------|--------|--------|
+| PR 1 | API Foundation & Real-Time Layer | S01 + S02 | Not started |
+| PR 2 | Player UI & Library Browser | S03 + S04 | Not started |
+| PR 3 | Card/Content Management & Settings | S05 – S08 | Not started |
+| PR 4 | Access Control, Gyro & PWA | S09 – S11 | Not started |
+
+Development happens on the [`feature/webui-modernization`](https://github.com/t13gazh/RPi-Jukebox-RFID/tree/feature/webui-modernization) branch. PRs will be offered to the upstream repo as they complete.
+
+## Additional Hardware
+
+This fork adds support for:
+
+* **MPU6050 gyro sensor** via [phonie-gyro](https://github.com/t13gazh/phonie-gyro) — tilt gestures to control playback (skip, volume, pause). Configurable via the new web UI (sensitivity profiles, calibration).
+
+---
+
+## Original Phoniebox Documentation
+
+*Everything below is from the [original Phoniebox project](https://github.com/MiczFlor/RPi-Jukebox-RFID) and applies to both the original and this fork.*
+
+---
 
 ## Introduction
 
@@ -30,35 +80,7 @@ See innovation, upcycling and creativity in the [Phoniebox Gallery](https://gith
 
 ## Install Phoniebox
 
-### 🔥 Version 3 is coming
-
-The goal for Version 3 was to tidy up the codebase, focus on a single programming language for the core (Python), establish a solid plugin system and build a responsive web client. [Read on here if you want to learn about more reasons](https://github.com/MiczFlor/RPi-Jukebox-RFID/blob/future3/main/documentation/README.md).
-
-#### 👋 Looking for adopters, testers and contributors
-
-If you want to test or help develop this new version called `future3`, let us know what you think about the new architecture, the new web application and help us find bugs (or fix them proactively).
-
-While Version 3 is still under development, it is becoming a lot more stable! Although not all of the features from version 2.x have been ported to version 3 so far.
-
-If you seek the adventure, your support will be more then welcome. Before contributing, check out the following references.
-
-* ⭐ **[Releases](https://github.com/MiczFlor/RPi-Jukebox-RFID/releases?q=v3&expanded=true)**
-* 🎵 **[Install Jukebox Version 3](https://github.com/MiczFlor/RPi-Jukebox-RFID/blob/future3/main/documentation/builders/installation.md)**
-* 🐛 [Report a bug](https://github.com/MiczFlor/RPi-Jukebox-RFID/issues/new?assignees=&labels=bug%2Cfuture3%2Cneeds+triage&projects=&template=bug_v3.yaml&title=%F0%9F%90%9B+%7C+)
-* 🚀 [Propose a feature](https://github.com/MiczFlor/RPi-Jukebox-RFID/issues/new?assignees=&labels=enhancement%2Cfuture3&projects=&template=feature_v3.yaml&title=%F0%9F%9A%80+%7C+)
-* ☑️ [Feature Status](https://github.com/MiczFlor/RPi-Jukebox-RFID/blob/future3/main/documentation/developers/status.md)
-* 📖 [Documentation](https://github.com/MiczFlor/RPi-Jukebox-RFID/blob/future3/main/documentation/README.md)
-* 👩‍💻 [Development](https://github.com/MiczFlor/RPi-Jukebox-RFID/blob/future3/main/documentation/developers/README.md)
-* 🦄 Code: [Release Branch](https://github.com/MiczFlor/RPi-Jukebox-RFID/tree/future3/main), [Development Branch](https://github.com/MiczFlor/RPi-Jukebox-RFID/tree/future3/develop)
-
----
-
 ### 🎶 Version 2
-
-> [!NOTE]
-> Version 3 is becoming mature and will soon be the new default of Phoniebox. Therefore Version 2 is slowly going into a maintenance mode and no new features will be added to this version.
-
-Check out the following references.
 
 * ⭐ **[Releases](https://github.com/MiczFlor/RPi-Jukebox-RFID/releases?q=v2&expanded=true)**
 * 🎵 **[Install Jukebox Version 2](#quick-install-version-2)**
@@ -220,8 +242,6 @@ See the Phoniebox code in action, watch this video and read the blog post from [
 | Installation und Hardware | Web App and Audio / Spotify | The finished Phoniebox in action |
 | --- | --- | --- |
 | [![Installation und Hardware](https://i.ytimg.com/vi/spHDGSxckmw/hqdefault.jpg)](https://youtu.be/spHDGSxckmw) | [![Web App and Audio / Spotify](https://i.ytimg.com/vi/9ZSKFoWr9WY/hqdefault.jpg)](https://youtu.be/9ZSKFoWr9WY) | [![The finished Phoniebox in action](https://i.ytimg.com/vi/YucQuwUD7XE/hqdefault.jpg)](https://youtu.be/YucQuwUD7XE) |
-
-A new video screencast about
 
 <!-- markdownlint-restore -->
 
