@@ -138,64 +138,64 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PLAY-01 | Phase 3: Player UI | Pending |
-| PLAY-02 | Phase 3: Player UI | Pending |
-| PLAY-03 | Phase 3: Player UI | Pending |
-| PLAY-04 | Phase 3: Player UI | Pending |
-| PLAY-05 | Phase 3: Player UI | Pending |
-| PLAY-06 | Phase 3: Player UI | Pending |
-| PLAY-07 | Phase 3: Player UI | Pending |
-| PLAY-08 | Phase 7: Parent Settings | Pending |
-| LIB-01 | Phase 4: Library Browser | Pending |
-| LIB-02 | Phase 4: Library Browser | Pending |
-| LIB-03 | Phase 4: Library Browser | Pending |
-| LIB-04 | Phase 4: Library Browser | Pending |
-| LIB-05 | Phase 4: Library Browser | Pending |
-| LIB-06 | Phase 4: Library Browser | Pending |
-| CARD-01 | Phase 5: Card Management | Pending |
-| CARD-02 | Phase 5: Card Management | Pending |
-| CARD-03 | Phase 5: Card Management | Pending |
-| CARD-04 | Phase 5: Card Management | Pending |
-| CARD-05 | Phase 5: Card Management | Pending |
-| CARD-06 | Phase 5: Card Management | Pending |
-| CARD-07 | Phase 5: Card Management | Pending |
-| CONT-01 | Phase 6: Content Management | Pending |
-| CONT-02 | Phase 6: Content Management | Pending |
-| CONT-03 | Phase 6: Content Management | Pending |
-| CONT-04 | Phase 6: Content Management | Pending |
-| CONT-05 | Phase 6: Content Management | Pending |
-| AUTH-01 | Phase 9: Access Control | Pending |
-| AUTH-02 | Phase 9: Access Control | Pending |
-| AUTH-03 | Phase 9: Access Control | Pending |
-| SETT-01 | Phase 7: Parent Settings | Pending |
-| SETT-02 | Phase 7: Parent Settings | Pending |
-| SETT-03 | Phase 7: Parent Settings | Pending |
-| SETT-04 | Phase 7: Parent Settings | Pending |
-| SETT-05 | Phase 7: Parent Settings | Pending |
-| SETT-06 | Phase 7: Parent Settings | Pending |
-| XPRT-01 | Phase 8: Expert Settings | Pending |
-| XPRT-02 | Phase 8: Expert Settings | Pending |
-| XPRT-03 | Phase 8: Expert Settings | Pending |
-| XPRT-04 | Phase 8: Expert Settings | Pending |
-| XPRT-05 | Phase 8: Expert Settings | Pending |
-| XPRT-06 | Phase 8: Expert Settings | Pending |
-| XPRT-07 | Phase 8: Expert Settings | Pending |
-| GYRO-01 | Phase 10: Gyro Integration | Pending |
-| GYRO-02 | Phase 10: Gyro Integration | Pending |
-| GYRO-03 | Phase 10: Gyro Integration | Pending |
-| GYRO-04 | Phase 10: Gyro Integration | Pending |
-| PLAT-01 | Phase 3: Player UI | Pending |
-| PLAT-02 | Phase 11: PWA & Polish | Pending |
-| PLAT-03 | Phase 11: PWA & Polish | Pending |
-| PLAT-04 | Phase 11: PWA & Polish | Pending |
-| PLAT-05 | Phase 2: Real-Time Layer | Pending |
-| PLAT-06 | Phase 3: Player UI | Pending |
-| PLAT-07 | Phase 3: Player UI | Pending |
-| INFR-01 | Phase 1: API Foundation | Pending |
-| INFR-02 | Phase 1: API Foundation | Pending |
-| INFR-03 | Phase 3: Player UI | Pending |
-| INFR-04 | Phase 1: API Foundation | Pending |
-| INFR-05 | Phase 1: API Foundation | Pending |
+| PLAY-01 | S03: Player UI | Pending |
+| PLAY-02 | S03: Player UI | Pending |
+| PLAY-03 | S03: Player UI | Pending |
+| PLAY-04 | S03: Player UI | Pending |
+| PLAY-05 | S03: Player UI | Pending |
+| PLAY-06 | S03: Player UI | Pending |
+| PLAY-07 | S03: Player UI | Pending |
+| PLAY-08 | S07: Parent Settings | Pending |
+| LIB-01 | S04: Library Browser | Pending |
+| LIB-02 | S04: Library Browser | Pending |
+| LIB-03 | S04: Library Browser | Pending |
+| LIB-04 | S04: Library Browser | Pending |
+| LIB-05 | S04: Library Browser | Pending |
+| LIB-06 | S04: Library Browser | Pending |
+| CARD-01 | S05: Card Management | Pending |
+| CARD-02 | S05: Card Management | Pending |
+| CARD-03 | S05: Card Management | Pending |
+| CARD-04 | S05: Card Management | Pending |
+| CARD-05 | S05: Card Management | Pending |
+| CARD-06 | S05: Card Management | Pending |
+| CARD-07 | S05: Card Management | Pending |
+| CONT-01 | S06: Content Management | Pending |
+| CONT-02 | S06: Content Management | Pending |
+| CONT-03 | S06: Content Management | Pending |
+| CONT-04 | S06: Content Management | Pending |
+| CONT-05 | S06: Content Management | Pending |
+| AUTH-01 | S09: Access Control | Pending |
+| AUTH-02 | S09: Access Control | Pending |
+| AUTH-03 | S09: Access Control | Pending |
+| SETT-01 | S07: Parent Settings | Pending |
+| SETT-02 | S07: Parent Settings | Pending |
+| SETT-03 | S07: Parent Settings | Pending |
+| SETT-04 | S07: Parent Settings | Pending |
+| SETT-05 | S07: Parent Settings | Pending |
+| SETT-06 | S07: Parent Settings | Pending |
+| XPRT-01 | S08: Expert Settings | Pending |
+| XPRT-02 | S08: Expert Settings | Pending |
+| XPRT-03 | S08: Expert Settings | Pending |
+| XPRT-04 | S08: Expert Settings | Pending |
+| XPRT-05 | S08: Expert Settings | Pending |
+| XPRT-06 | S08: Expert Settings | Pending |
+| XPRT-07 | S08: Expert Settings | Pending |
+| GYRO-01 | S10: Gyro Integration | Pending |
+| GYRO-02 | S10: Gyro Integration | Pending |
+| GYRO-03 | S10: Gyro Integration | Pending |
+| GYRO-04 | S10: Gyro Integration | Pending |
+| PLAT-01 | S03: Player UI | Pending |
+| PLAT-02 | S11: PWA & Polish | Pending |
+| PLAT-03 | S11: PWA & Polish | Pending |
+| PLAT-04 | S11: PWA & Polish | Pending |
+| PLAT-05 | S02: Real-Time Layer | Pending |
+| PLAT-06 | S03: Player UI | Pending |
+| PLAT-07 | S03: Player UI | Pending |
+| INFR-01 | S01: API Foundation & Deploy Pipeline | Pending |
+| INFR-02 | S01: API Foundation & Deploy Pipeline | Pending |
+| INFR-03 | S03: Player UI | Pending |
+| INFR-04 | S01: API Foundation & Deploy Pipeline | Pending |
+| INFR-05 | S01: API Foundation & Deploy Pipeline | Pending |
 
 **Coverage:**
 - v1 requirements: 58 total

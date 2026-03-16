@@ -87,4 +87,4 @@ Parents can effortlessly manage their children's music box from any phone — no
 | Offline-first architecture | Music box must work without internet, streams are naturally online-only | -- Pending |
 
 ---
-*Last updated: 2026-02-06 after initialization*
+*Last updated: 2026-03-16 after fork setup and GSD-2 migration*
