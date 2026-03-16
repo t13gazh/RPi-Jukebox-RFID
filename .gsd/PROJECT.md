@@ -31,8 +31,7 @@ Parents can effortlessly manage their children's music box from any phone — no
 - [ ] Sleep timer and scheduled stop
 - [ ] Music upload through browser
 - [ ] Folder and playlist creation in parent area
-- [ ] YouTube/stream download in parent area
-- [ ] Stream linking: internet radio, podcasts (RSS), ARD/NDR Audiothek, free audiobook libraries, arbitrary URLs
+- [ ] Assign stream URLs to RFID cards (internet radio, arbitrary URLs)
 - [ ] WiFi settings in expert area
 - [ ] System info, restart, updates in expert area
 - [ ] GPIO/hardware configuration in expert area

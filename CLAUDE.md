@@ -17,7 +17,7 @@ Was repariert/ersetzt wird:
 2. **Gyro-Sensor Integration** (Prio 2) — phonie-gyro ins Web-UI integrieren
 3. Karten-Management (Scan-and-Select Wizard)
 4. Rollentrennung (Open/Parent-PIN/Expert-PIN)
-5. Streaming & Content (ARD/NDR Audiothek, Podcasts, yt-dlp)
+5. Stream-URLs an Karten zuweisen (Internet-Radio, beliebige URLs via CARD-06)
 6. PWA & Offline-Fähigkeit
 
 ## Wichtige Dateien
